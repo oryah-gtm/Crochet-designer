@@ -76,6 +76,27 @@ export const useStore = create<AppState>()(
         set({ cells: newCells, history });
       },
 
+      applyToAll: () => {
+        const state = get();
+        const history = [deepCloneCells(state.cells), ...state.history].slice(0, MAX_HISTORY);
+        const newCells = deepCloneCells(state.cells);
+        for (const row of newCells) {
+          for (const cell of row) {
+            if (state.activeTool === 'fill') {
+              cell.fillColor = state.fillColor;
+            } else if (state.activeTool === 'border') {
+              cell.borderColor = state.borderColor;
+            } else if (state.activeTool === 'icon' && state.selectedIconId) {
+              cell.iconId = state.selectedIconId;
+              cell.iconColor = state.iconColor;
+            } else if (state.activeTool === 'erase') {
+              delete cell.iconId;
+            }
+          }
+        }
+        set({ cells: newCells, history });
+      },
+
       placeIcon: (cellId: string, iconId: string) => {
         const state = get();
         const [row, col] = cellId.split('-').map(Number);

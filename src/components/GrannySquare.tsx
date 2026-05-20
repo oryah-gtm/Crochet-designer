@@ -1,6 +1,6 @@
 import React from 'react';
 import { adjustHexColor } from '../utils';
-import { getIconComponent } from '../icons';
+import { getIconPaths } from '../icons';
 
 interface GrannySquareProps {
   fillColor: string;
@@ -21,8 +21,12 @@ const GrannySquare: React.FC<GrannySquareProps> = ({
   const lighterFill = adjustHexColor(fillColor, 30);
   const centerDark = adjustHexColor(fillColor, -45);
 
-  const IconComponent = iconId ? getIconComponent(iconId) : null;
-  const iconSize = Math.round(size * 0.38);
+  const IconPaths = iconId ? getIconPaths(iconId) : null;
+
+  // Icon occupies 52% of the 100-unit viewBox (52px), centered
+  const iconSize = 52;
+  const iconScale = iconSize / 24;
+  const iconOffset = (100 - iconSize) / 2;
 
   return (
     <svg
@@ -38,67 +42,45 @@ const GrannySquare: React.FC<GrannySquareProps> = ({
       {/* Main fill area inset ~8px */}
       <rect x="8" y="8" width="84" height="84" rx="3" fill={fillColor} />
 
-      {/* Cross pattern - horizontal arm (lighter) */}
-      <rect x="8" y="38" width="84" height="24" rx="2" fill={lighterFill} opacity="0.6" />
+      {/* Cross pattern - horizontal arm */}
+      <rect x="8" y="38" width="84" height="24" rx="2" fill={lighterFill} opacity="0.55" />
+      {/* Cross pattern - vertical arm */}
+      <rect x="38" y="8" width="24" height="84" rx="2" fill={lighterFill} opacity="0.55" />
 
-      {/* Cross pattern - vertical arm (lighter) */}
-      <rect x="38" y="8" width="24" height="84" rx="2" fill={lighterFill} opacity="0.6" />
-
-      {/* Center square (darker) */}
-      <rect x="38" y="38" width="24" height="24" rx="2" fill={centerDark} opacity="0.7" />
+      {/* Center square */}
+      <rect x="38" y="38" width="24" height="24" rx="2" fill={centerDark} opacity="0.65" />
 
       {/* Corner cluster puffs - top-left */}
       <rect x="10" y="10" width="22" height="22" rx="6" fill={darkerFill} opacity="0.75" />
-      <rect x="13" y="13" width="16" height="16" rx="4" fill={darkerFill} opacity="0.5" />
+      <rect x="13" y="13" width="16" height="16" rx="4" fill={darkerFill} opacity="0.45" />
       <circle cx="21" cy="21" r="4" fill={fillColor} opacity="0.8" />
 
       {/* Corner cluster puffs - top-right */}
       <rect x="68" y="10" width="22" height="22" rx="6" fill={darkerFill} opacity="0.75" />
-      <rect x="71" y="13" width="16" height="16" rx="4" fill={darkerFill} opacity="0.5" />
+      <rect x="71" y="13" width="16" height="16" rx="4" fill={darkerFill} opacity="0.45" />
       <circle cx="79" cy="21" r="4" fill={fillColor} opacity="0.8" />
 
       {/* Corner cluster puffs - bottom-left */}
       <rect x="10" y="68" width="22" height="22" rx="6" fill={darkerFill} opacity="0.75" />
-      <rect x="13" y="71" width="16" height="16" rx="4" fill={darkerFill} opacity="0.5" />
+      <rect x="13" y="71" width="16" height="16" rx="4" fill={darkerFill} opacity="0.45" />
       <circle cx="21" cy="79" r="4" fill={fillColor} opacity="0.8" />
 
       {/* Corner cluster puffs - bottom-right */}
       <rect x="68" y="68" width="22" height="22" rx="6" fill={darkerFill} opacity="0.75" />
-      <rect x="71" y="71" width="16" height="16" rx="4" fill={darkerFill} opacity="0.5" />
+      <rect x="71" y="71" width="16" height="16" rx="4" fill={darkerFill} opacity="0.45" />
       <circle cx="79" cy="79" r="4" fill={fillColor} opacity="0.8" />
 
-      {/* Small connector circles where arms meet border */}
-      <circle cx="50" cy="10" r="3" fill={darkerFill} opacity="0.6" />
-      <circle cx="50" cy="90" r="3" fill={darkerFill} opacity="0.6" />
-      <circle cx="10" cy="50" r="3" fill={darkerFill} opacity="0.6" />
-      <circle cx="90" cy="50" r="3" fill={darkerFill} opacity="0.6" />
+      {/* Connector dots at mid-edges */}
+      <circle cx="50" cy="10" r="3" fill={darkerFill} opacity="0.55" />
+      <circle cx="50" cy="90" r="3" fill={darkerFill} opacity="0.55" />
+      <circle cx="10" cy="50" r="3" fill={darkerFill} opacity="0.55" />
+      <circle cx="90" cy="50" r="3" fill={darkerFill} opacity="0.55" />
 
-      {/* Small yarn texture dots on the cross */}
-      <circle cx="50" cy="30" r="2" fill={lighterFill} opacity="0.8" />
-      <circle cx="50" cy="70" r="2" fill={lighterFill} opacity="0.8" />
-      <circle cx="30" cy="50" r="2" fill={lighterFill} opacity="0.8" />
-      <circle cx="70" cy="50" r="2" fill={lighterFill} opacity="0.8" />
-
-      {/* Icon overlay in center */}
-      {IconComponent && (
-        <foreignObject
-          x={(100 - iconSize) / 2}
-          y={(100 - iconSize) / 2}
-          width={iconSize}
-          height={iconSize}
-        >
-          <div
-            style={{
-              width: iconSize,
-              height: iconSize,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <IconComponent color={iconColor} size={iconSize} />
-          </div>
-        </foreignObject>
+      {/* Icon overlay — embedded directly as SVG elements for crisp rendering */}
+      {IconPaths && (
+        <g transform={`translate(${iconOffset}, ${iconOffset}) scale(${iconScale})`}>
+          <IconPaths color={iconColor} />
+        </g>
       )}
     </svg>
   );

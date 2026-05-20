@@ -50,8 +50,8 @@ const DraggableIconCard: React.FC<DraggableIconCardProps> = ({
           : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
       }`}
     >
-      <div className="w-10 h-10 flex items-center justify-center">
-        <IconComp color={iconColor} size={28} />
+      <div className="w-12 h-12 flex items-center justify-center">
+        <IconComp color={iconColor} size={36} />
       </div>
       <span className="text-xs text-slate-400 leading-none text-center">{name}</span>
     </div>
@@ -65,12 +65,31 @@ const IconPanel: React.FC = () => {
   const setIconColor = useStore((s) => s.setIconColor);
   const activeTool = useStore((s) => s.activeTool);
   const setActiveTool = useStore((s) => s.setActiveTool);
+  const applyToAll = useStore((s) => s.applyToAll);
 
   const [showColorPicker, setShowColorPicker] = React.useState(false);
 
   return (
     <div className="space-y-3">
-      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Icons</p>
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Icons</p>
+        {activeTool === 'icon' && selectedIconId && (
+          <button
+            onClick={applyToAll}
+            className="text-xs bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 hover:text-purple-100 border border-purple-500/30 hover:border-purple-400/60 px-2.5 py-1 rounded-lg transition-all duration-150 font-medium"
+          >
+            Apply to all
+          </button>
+        )}
+        {activeTool === 'erase' && (
+          <button
+            onClick={applyToAll}
+            className="text-xs bg-red-500/20 hover:bg-red-500/40 text-red-300 hover:text-red-100 border border-red-500/30 hover:border-red-400/60 px-2.5 py-1 rounded-lg transition-all duration-150 font-medium"
+          >
+            Clear all icons
+          </button>
+        )}
+      </div>
 
       {/* Eraser option */}
       {activeTool === 'icon' && (
@@ -87,7 +106,7 @@ const IconPanel: React.FC = () => {
       )}
 
       {/* Icon grid */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {ICON_LIST.map(({ id, name, component: IconComp }) => (
           <DraggableIconCard
             key={id}

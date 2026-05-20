@@ -26,6 +26,7 @@ export interface AppState {
   setSelectedIconId: (id: string | null) => void;
   setIconColor: (color: string) => void;
   applyTool: (cellId: string) => void;
+  applyToAll: () => void;
   placeIcon: (cellId: string, iconId: string) => void;
   undo: () => void;
   clearGrid: () => void;

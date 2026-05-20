@@ -6,9 +6,11 @@ interface ColorPanelProps {
   label: string;
   color: string;
   onChange: (color: string) => void;
+  onApplyToAll?: () => void;
+  applyToAllLabel?: string;
 }
 
-const ColorPanel: React.FC<ColorPanelProps> = ({ label, color, onChange }) => {
+const ColorPanel: React.FC<ColorPanelProps> = ({ label, color, onChange, onApplyToAll, applyToAllLabel }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [inputValue, setInputValue] = useState(color);
   const [copied, setCopied] = useState(false);
@@ -46,7 +48,17 @@ const ColorPanel: React.FC<ColorPanelProps> = ({ label, color, onChange }) => {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</p>
+        {onApplyToAll && (
+          <button
+            onClick={onApplyToAll}
+            className="text-xs bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 hover:text-purple-100 border border-purple-500/30 hover:border-purple-400/60 px-2.5 py-1 rounded-lg transition-all duration-150 font-medium"
+          >
+            {applyToAllLabel ?? 'Apply to all'}
+          </button>
+        )}
+      </div>
 
       {/* Preset swatches */}
       <div className="grid grid-cols-6 gap-1.5">

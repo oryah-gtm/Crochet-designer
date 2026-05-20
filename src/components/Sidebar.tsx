@@ -39,6 +39,7 @@ const Sidebar: React.FC = () => {
   const setActiveTool = useStore((s) => s.setActiveTool);
   const setFillColor = useStore((s) => s.setFillColor);
   const setBorderColor = useStore((s) => s.setBorderColor);
+  const applyToAll = useStore((s) => s.applyToAll);
 
   const tools: { tool: Tool; label: string; icon: string; description: string }[] = [
     { tool: 'fill', label: 'Fill', icon: '🎨', description: 'Paint square color' },
@@ -84,14 +85,14 @@ const Sidebar: React.FC = () => {
         {/* Fill Color Panel */}
         {activeTool === 'fill' && (
           <section className="bg-white/5 rounded-2xl p-4 border border-white/8">
-            <ColorPanel label="Fill Color" color={fillColor} onChange={setFillColor} />
+            <ColorPanel label="Fill Color" color={fillColor} onChange={setFillColor} onApplyToAll={applyToAll} applyToAllLabel="Apply to all" />
           </section>
         )}
 
         {/* Border Color Panel */}
         {activeTool === 'border' && (
           <section className="bg-white/5 rounded-2xl p-4 border border-white/8">
-            <ColorPanel label="Border / Join Color" color={borderColor} onChange={setBorderColor} />
+            <ColorPanel label="Border / Join Color" color={borderColor} onChange={setBorderColor} onApplyToAll={applyToAll} applyToAllLabel="Apply to all" />
           </section>
         )}
 
